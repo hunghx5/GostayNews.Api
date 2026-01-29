@@ -1,19 +1,15 @@
 using GoStay.Api.Configurations;
 using GoStay.Api.Providers;
 using GoStay.Common.Configuration;
-using GoStay.Common.Helpers;
 using GoStay.Common.Helpers.Order;
 using GoStay.DataAccess.DBContext;
-using GoStay.DataAccess.Entities;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Repositories;
 using GoStay.DataAccess.UnitOfWork;
 using GoStay.DataDto.Users;
 using GoStay.Services;
 using GoStay.Services.Hotels;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Q101.ServiceCollectionExtensions.ServiceCollectionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +47,7 @@ var app = builder.Build();
 StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
 
+app.UseCors("GoStayPolicy");
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("GoStayPolicy",
@@ -80,8 +77,6 @@ app.UseSwaggerUI(option =>
 //}
 
 app.UseHttpsRedirection();
-
-app.UseCors("GoStayPolicy");
 
 app.UseAuthorization();
 
