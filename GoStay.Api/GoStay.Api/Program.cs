@@ -47,19 +47,19 @@ var app = builder.Build();
 StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
 
-app.UseCors("GoStayPolicy");
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("GoStayPolicy",
-        p => p
-            .WithOrigins(
-                "https://api.realtech.com.vn",
-                "https://www.api.realtech.com.vn"
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-    );
-});
+//app.UseCors("GoStayPolicy");
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("GoStayPolicy",
+//        p => p
+//            .WithOrigins(
+//                "https://api.realtech.com.vn",
+//                "https://www.api.realtech.com.vn"
+//            )
+//            .AllowAnyHeader()
+//            .AllowAnyMethod()
+//    );
+//});
 
 app.UseSwagger();
 app.UseSwaggerUI(option =>
