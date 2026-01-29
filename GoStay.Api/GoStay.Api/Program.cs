@@ -49,6 +49,20 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
 StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSwagger",
+        p => p
+            .WithOrigins(
+                "https://api.realtech.com.vn",
+                "https://www.api.realtech.com.vn"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+    );
+});
+
 app.UseSwagger();
 app.UseSwaggerUI(option =>
 {
