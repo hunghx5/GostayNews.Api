@@ -1,37 +1,40 @@
-using GoStay.Api.Configurations;
-using GoStay.Api.Providers;
+using Microsoft.EntityFrameworkCore;
 using GoStay.Common.Configuration;
-using GoStay.Common.Helpers.Order;
 using GoStay.DataAccess.DBContext;
 using GoStay.DataAccess.Interface;
 using GoStay.DataAccess.Repositories;
 using GoStay.DataAccess.UnitOfWork;
-using GoStay.DataDto.Users;
-using GoStay.Services;
-using GoStay.Services.Hotels;
-using Microsoft.EntityFrameworkCore;
 using Q101.ServiceCollectionExtensions.ServiceCollectionExtensions;
+using GoStay.Services.Hotels;
+using GoStay.Api.Configurations;
+using GoStay.Common.Helpers.Order;
+using GoStay.Services;
+using GoStay.DataAccess.Entities;
+using GoStay.DataDto.Users;
+using Microsoft.Extensions.Configuration;
+using GoStay.Api.Providers;
+using GoStay.Common.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = new ConfigurationBuilder()
-	.AddJsonFile("appsettings.json", optional: false)
-	.Build();
+    .AddJsonFile("appsettings.json", optional: false)
+    .Build();
 AppConfigs.LoadAll(config);
 builder.Services.AddHttpContextAccessor();
 //--register CommonDBContext
 builder.Services.AddDbContext<CommonDBContext>(options =>
-			options.UseSqlServer(AppConfigs.SqlConnection, options => { }),
-			ServiceLifetime.Scoped
-			);
+            options.UseSqlServer(AppConfigs.SqlConnection, options => { }),
+            ServiceLifetime.Scoped
+            );
 builder.Services.AddTransient(typeof(ICommonRepository<>), typeof(CommonRepository<>));
 builder.Services.AddTransient(typeof(ICommonUoW), typeof(CommonUoW));
 builder.Services.AddScoped(typeof(IOrderFunction), typeof(OrderFunction));
 //--register Service
 builder.Services.RegisterAssemblyTypesByName(typeof(IHotelService).Assembly,
-	 name => name.EndsWith("Service")) // Condition for name of type
+     name => name.EndsWith("Service")) // Condition for name of type
 .AsScoped()
 .AsImplementedInterfaces()
-	 .Bind();
+     .Bind();
 builder.Services.AddCommonServices();
 builder.Services.Configure<AppSettings>(config.GetSection("AppSettings"));
 
@@ -46,26 +49,11 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 var app = builder.Build();
 StaticServiceProvider.Provider = app.Services;
 app.UseDeveloperExceptionPage();
-
-//app.UseCors("GoStayPolicy");
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("GoStayPolicy",
-//        p => p
-//            .WithOrigins(
-//                "https://api.realtech.com.vn",
-//                "https://www.api.realtech.com.vn"
-//            )
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//    );
-//});
-
 app.UseSwagger();
 app.UseSwaggerUI(option =>
 {
-	option.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api");
-	//option.RoutePrefix = "allapp";
+    option.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api");
+    //option.RoutePrefix = "allapp";
 });
 
 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoStay Api"));
