@@ -524,7 +524,7 @@ namespace GoStay.Services.Newss
                 data.LatestNews = temp.OrderByDescending(x => x.DateCreate).Take(latestQuantity).ToList();
 
                 data.LatestNews.ForEach(x => x.Total = total);
-                data.LatestNews.ForEach(x => x.PageNum = (latestQuantity/10));
+                data.LatestNews.ForEach(x => x.PageNum = (latestQuantity / 10));
                 data.Categories = _newsCategoryRepository.FindAll(x => x.Iddomain == AppConfigs.IdDomain)
                                     .Select(x => new CategoryNews
                                     {
@@ -616,7 +616,7 @@ namespace GoStay.Services.Newss
             ResponseBase response = new ResponseBase();
             try
             {
-                var news = _newsRepository.FindAll(x => x.Id == Id && (domain == null || x.Iddomain == domain) && x.Deleted == 0 && x.Status == 3)
+                var news = _newsRepository.FindAll(x => x.Id == Id && (domain == null || x.Iddomain == domain))
                             .Include(x => x.IdCategoryNavigation)
                             .Include(x => x.IdUserNavigation)
                             .Include(x => x.NewsTopics).ThenInclude(y => y.IdNewsTopicNavigation)
@@ -1119,8 +1119,8 @@ namespace GoStay.Services.Newss
                                                          && (idCategory > 0 ? x.IdCategory == idCategory : true)
                                                          && (idTopic > 0 ? listId.Contains(x.Id) : true))
                                                         .OrderByDescending(x => x.DateCreate);
-                
-                                                        
+
+
                 if (listNews != null && listNews.Any())
                 {
                     var total = listNews.Count();
@@ -1142,8 +1142,8 @@ namespace GoStay.Services.Newss
                         Click = x.Click ?? 0,
                         Slug = SlugHelper.GenerateSlug(VietnameseNormalizer.NormalizeVietnamese(x.Title)),
                         Total = total,
-                        CommentCount = x.CommentNews.Where(x=>x.Published==true).Count(),
-                        PageNum = pageSize/10,
+                        CommentCount = x.CommentNews.Where(x => x.Published == true).Count(),
+                        PageNum = pageSize / 10,
                     });
                 }
 
@@ -1166,7 +1166,7 @@ namespace GoStay.Services.Newss
             {
                 var listId = new List<int>();
                 keyword = keyword.Trim();
-                var key = keyword.RemoveUnicode().Replace(" ",string.Empty).Trim();
+                var key = keyword.RemoveUnicode().Replace(" ", string.Empty).Trim();
                 var listNews = _newsRepository.FindAll(x => x.Iddomain == 1 && x.Deleted != 1 && x.Status == (int)NewsStatus.Accepted
                                                          && x.Keysearch.Contains(key))
                                                         .OrderByDescending(x => x.DateCreate);
