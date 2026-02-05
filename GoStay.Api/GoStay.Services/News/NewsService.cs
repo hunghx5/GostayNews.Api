@@ -640,6 +640,7 @@ namespace GoStay.Services.Newss
                 newsDetail.Content = news.Content;
                 newsDetail.PictureTitle = news.PictureTitle;
                 newsDetail.Description = news.Description;
+                newsDetail.Url = news.Url;
                 newsDetail.Category = news.IdCategoryNavigation.Category;
                 newsDetail.LangId = news.LangId;
                 newsDetail.DateCreate = news.DateCreate;
