@@ -27,6 +27,7 @@ namespace GoStay.DataDto.News
         public List<int>? IdTopics { get; set; }
         public string? PictureTitle { get; set; }
         public string? Description { get; set; }
+        public string? Url { get; set; }
         public string Category { get; set; }
         public string CategoryEng { get; set; }
         public string CategoryChi { get; set; }

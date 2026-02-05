@@ -296,6 +296,7 @@ namespace GoStay.Services.Newss
                     Description = x.Description,
                     LangId = x.LangId,
                     PictureTitle = x.PictureTitle,
+                    Url = x.Url,
                     DateCreate = x.DateCreate,
                     IdDomain = x.Iddomain,
                     Status = x.Status,
@@ -507,6 +508,7 @@ namespace GoStay.Services.Newss
                     IdTopics = x.NewsTopics.Select(y => y.IdNewsTopic).ToList(),
                     PictureTitle = x.PictureTitle,
                     Description = x.Description,
+                    Url = x.Url,
                     Category = x.IdCategoryNavigation.Category,
                     CategoryChi = x.IdCategoryNavigation.CategoryChi,
                     CategoryEng = x.IdCategoryNavigation.CategoryEng,
@@ -799,6 +801,7 @@ namespace GoStay.Services.Newss
                 newsEntity.DateEdit = DateTime.UtcNow;
                 newsEntity.LangId = (int)news.LangId;
                 newsEntity.Iddomain = (int)news.IdDomain;
+                newsEntity.Url = news.Url;
 
 
 
@@ -885,6 +888,7 @@ namespace GoStay.Services.Newss
                         IdCategory = x.IdCategory,
                         PictureTitle = x.PictureTitle,
                         Description = x.Description,
+                        Url = x.Url,
                         LangId = x.LangId,
                         Tag = x.Tag == null ? null : x.Tag,
                         Click = x.Click == null ? 0 : (int)x.Click,
@@ -925,6 +929,7 @@ namespace GoStay.Services.Newss
                         IdCategory = x.IdCategory,
                         PictureTitle = x.PictureTitle,
                         Description = x.Description,
+                        Url = x.Url,
                         LangId = x.LangId,
                         Tag = x.Tag == null ? null : x.Tag,
                         Click = x.Click == null ? 0 : (int)x.Click,
@@ -1135,6 +1140,7 @@ namespace GoStay.Services.Newss
                         IdTopics = x.NewsTopics.Select(z => z.IdNewsTopic).ToList(),
                         PictureTitle = x.PictureTitle,
                         Description = x.Description,
+                        Url = x.Url,
                         Category = x.IdCategoryNavigation.Category,
                         CategoryEng = x.IdCategoryNavigation.CategoryEng,
                         CategoryChi = x.IdCategoryNavigation.CategoryChi,
@@ -1185,6 +1191,7 @@ namespace GoStay.Services.Newss
                         IdTopics = x.NewsTopics.Select(z => z.IdNewsTopic).ToList(),
                         PictureTitle = x.PictureTitle,
                         Description = x.Description,
+                        Url = x.Url,
                         Category = x.IdCategoryNavigation.Category,
                         CategoryEng = x.IdCategoryNavigation.CategoryEng,
                         CategoryChi = x.IdCategoryNavigation.CategoryChi,

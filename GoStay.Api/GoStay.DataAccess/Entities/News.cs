@@ -28,6 +28,7 @@ namespace GoStay.DataAccess.Entities
         public int? Click { get; set; }
         public string? Tag { get; set; }
         public int? Iddomain { get; set; }
+        public string? Url { get; set; }
 
         public virtual NewsCategory IdCategoryNavigation { get; set; } = null!;
         public virtual User IdUserNavigation { get; set; } = null!;

@@ -15,6 +15,7 @@ namespace GoStay.DataDto.News
         public int? LangId { get; set; }
         public List<int>? IdTopics { get; set; }
         public int? IdDomain { get; set; }
+        public string? Url { get; set; }
     }
     public partial class NewsDetailDto
     {
@@ -67,6 +68,7 @@ namespace GoStay.DataDto.News
 
         public string? PictureTitle { get; set; }
         public string? Description { get; set; }
+        public string? Url { get; set; }
 
         public string Category { get; set; }
         public string CategoryEng { get; set; }

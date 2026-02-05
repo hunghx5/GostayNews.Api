@@ -758,6 +758,8 @@ namespace GoStay.DataAccess.DBContext
 
                 entity.Property(e => e.Title).HasMaxLength(150);
 
+                entity.Property(e => e.Url).HasMaxLength(500);
+
                 entity.HasOne(d => d.IdCategoryNavigation)
                     .WithMany(p => p.News)
                     .HasForeignKey(d => d.IdCategory)

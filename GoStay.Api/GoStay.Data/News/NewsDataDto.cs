@@ -26,6 +26,7 @@ namespace GoStay.DataDto.News
         public int Total { get; set; }
 
         public string? PictureTitle { get; set; }
+        public string? Url { get; set; }
 
         public List<TopicNewsDataDto>? Topics { get; set; }
         public List<int>? TopicIds { get; set; }
