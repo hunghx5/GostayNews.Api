@@ -1,7 +1,12 @@
-﻿namespace GoStay.Data.HotelDto
+﻿using System.Text.Json.Serialization;
+
+namespace GoStay.Data.HotelDto
 {
 	public class HotelHomePageDto
 	{
+        private const string CdnBaseUrl = "https://cdn.realtech.com.vn/";
+        private const string WebsiteBaseUrl = "https://gostay.vn";
+
         public int Id { get; set; }
         public string HotelName { get; set; }
         public string TinhThanh { get; set; }
@@ -31,8 +36,27 @@
 			}
         }
         public List<string> Pictures { get; set; } = new List<string>();
+        [JsonPropertyName("listImage")]
+        public List<string> ListImage
+        {
+            get
+            {
+                return Pictures
+                    .Where(x => !string.IsNullOrWhiteSpace(x))
+                    .Select(ToCdnUrl)
+                    .ToList();
+            }
+        }
         public DateTime LastOrderTime { get; set; }
         public string Slug { get; set; }
+        [JsonPropertyName("detailLink")]
+        public string DetailLink
+        {
+            get
+            {
+                return $"{WebsiteBaseUrl}/khach-san/{Id}/{Slug}";
+            }
+        }
 
 
         public double? Discount { get; set; }
@@ -58,6 +82,18 @@
         }
         public string? TopService { get; set; }
         public int RandomOrderNumber { get; set; } = 1;
+
+        private static string ToCdnUrl(string url)
+        {
+            var trimmedUrl = url.Trim();
+            if (trimmedUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                trimmedUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            {
+                return trimmedUrl;
+            }
+
+            return CdnBaseUrl + trimmedUrl.TrimStart('/');
+        }
     }
 
 }
