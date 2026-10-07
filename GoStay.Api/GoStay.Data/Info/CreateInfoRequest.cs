@@ -8,5 +8,8 @@ namespace GoStay.DataDto.Info
         [EmailAddress]
         [StringLength(255)]
         public string Email { get; set; } = string.Empty;
+
+        [StringLength(255)]
+        public string? Domain { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 using GoStay.DataAccess.DBContext;
+using GoStay.DataDto.Info;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace GoStay.Services.Info
 {
@@ -12,11 +14,53 @@ namespace GoStay.Services.Info
             _context = context;
         }
 
-        public async Task AddEmailAsync(string email, CancellationToken cancellationToken = default)
+        public async Task AddEmailAsync(string email, string? domain, CancellationToken cancellationToken = default)
         {
             await _context.Database.ExecuteSqlInterpolatedAsync(
-                $"INSERT INTO [Info] ([email]) VALUES ({email.Trim()})",
+                $"INSERT INTO [Info] ([email], [domain]) VALUES ({email.Trim()}, {domain?.Trim()})",
                 cancellationToken);
+        }
+
+        public async Task<List<InfoDto>> GetByDomainAsync(string domain, CancellationToken cancellationToken = default)
+        {
+            var connection = _context.Database.GetDbConnection();
+            var shouldClose = connection.State != ConnectionState.Open;
+            if (shouldClose)
+            {
+                await _context.Database.OpenConnectionAsync(cancellationToken);
+            }
+
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT [email], [domain] FROM [Info] WHERE [domain] = @domain ORDER BY [email]";
+                var parameter = command.CreateParameter();
+                parameter.ParameterName = "@domain";
+                parameter.DbType = DbType.AnsiString;
+                parameter.Size = 255;
+                parameter.Value = domain.Trim();
+                command.Parameters.Add(parameter);
+
+                var items = new List<InfoDto>();
+                using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    items.Add(new InfoDto
+                    {
+                        Email = reader.IsDBNull(0) ? null : reader.GetString(0),
+                        Domain = reader.IsDBNull(1) ? null : reader.GetString(1)
+                    });
+                }
+
+                return items;
+            }
+            finally
+            {
+                if (shouldClose)
+                {
+                    await _context.Database.CloseConnectionAsync();
+                }
+            }
         }
     }
 }
