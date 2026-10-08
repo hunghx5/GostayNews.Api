@@ -3,6 +3,7 @@ using GoStay.DataDto.Info;
 using GoStay.Services.Info;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Data.SqlClient;
 
 namespace GoStay.Api.Controllers
 {
@@ -30,11 +31,59 @@ namespace GoStay.Api.Controllers
             });
         }
 
+        [HttpDelete("{id:int}")]
+        public async Task<ResponseBase> Delete(
+            [FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var response = new ResponseBase();
+            if (id < 1)
+            {
+                response.Code = 400;
+                response.Message = "Id phải lớn hơn 0.";
+                return response;
+            }
+
+            try
+            {
+                var deleted = await _infoService.DeleteAsync(id, cancellationToken);
+                if (!deleted)
+                {
+                    response.Code = 400;
+                    response.Message = "Không tìm thấy bản ghi Info với id này.";
+                    return response;
+                }
+
+                response.Code = 200;
+                response.Data = "Success";
+                return response;
+            }
+            catch (SqlException)
+            {
+                response.Code = 400;
+                response.Message = "Không thể xóa bản ghi Info.";
+                return response;
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<ResponseBase>> Create(
             [FromBody] CreateInfoRequest request, CancellationToken cancellationToken)
         {
-            await _infoService.AddEmailAsync(request.Email, request.Domain, cancellationToken);
+            try
+            {
+                await _infoService.AddEmailAsync(request.Email, request.Domain, cancellationToken);
+            }
+            catch (SqlException exception) when (exception.Number == 2601 || exception.Number == 2627)
+            {
+                return Conflict(new ResponseBase
+                {
+                    Ok = false,
+                    Code = StatusCodes.Status409Conflict,
+                    Message = "Email đã tồn tại trong domain này.",
+                    Count = 0,
+                    Data = new { Email = request.Email.Trim(), Domain = request.Domain?.Trim() }
+                });
+            }
 
             return Ok(new ResponseBase
             {

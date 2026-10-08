@@ -21,6 +21,13 @@ namespace GoStay.Services.Info
                 cancellationToken);
         }
 
+        public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var affectedRows = await _context.Database.ExecuteSqlInterpolatedAsync(
+                $"DELETE FROM [Info] WHERE [id] = {id}", cancellationToken);
+            return affectedRows > 0;
+        }
+
         public async Task<List<InfoDto>> GetByDomainAsync(string domain, CancellationToken cancellationToken = default)
         {
             var connection = _context.Database.GetDbConnection();
@@ -33,7 +40,7 @@ namespace GoStay.Services.Info
             try
             {
                 using var command = connection.CreateCommand();
-                command.CommandText = "SELECT [email], [domain] FROM [Info] WHERE @domain = '0' OR [domain] = @domain ORDER BY [email]";
+                command.CommandText = "SELECT [email], [domain], [id] FROM [Info] WHERE @domain = '0' OR [domain] = @domain ORDER BY [email], [id]";
                 var parameter = command.CreateParameter();
                 parameter.ParameterName = "@domain";
                 parameter.DbType = DbType.AnsiString;
@@ -47,6 +54,7 @@ namespace GoStay.Services.Info
                 {
                     items.Add(new InfoDto
                     {
+                        Id = reader.GetInt32(2),
                         Email = reader.IsDBNull(0) ? null : reader.GetString(0),
                         Domain = reader.IsDBNull(1) ? null : reader.GetString(1)
                     });
