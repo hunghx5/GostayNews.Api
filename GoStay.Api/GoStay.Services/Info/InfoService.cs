@@ -33,7 +33,7 @@ namespace GoStay.Services.Info
             try
             {
                 using var command = connection.CreateCommand();
-                command.CommandText = "SELECT [email], [domain] FROM [Info] WHERE [domain] = @domain ORDER BY [email]";
+                command.CommandText = "SELECT [email], [domain] FROM [Info] WHERE @domain = '0' OR [domain] = @domain ORDER BY [email]";
                 var parameter = command.CreateParameter();
                 parameter.ParameterName = "@domain";
                 parameter.DbType = DbType.AnsiString;

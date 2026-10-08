@@ -17,6 +17,7 @@ namespace GoStay.Api.Controllers
             _infoService = infoService;
         }
 
+        // Pass domain=0 to retrieve all records.
         [HttpGet]
         public async Task<ActionResult<ResponseBase>> GetByDomain(
             [FromQuery, Required, StringLength(255)] string domain, CancellationToken cancellationToken)
